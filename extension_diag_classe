@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class Encadrant {
+  - id : int
+  - nom : String
+  - prénom : String
+  - email : String
+}
+class Enseignant
+class Responsable
+class Salle {
+  - idSalle : int
+  - nom : String
+  - capacité : int
+}
+class SeanceTD {
+  - idSeance : int
+  - date : Date
+  - heureDebut : Heure
+  - heureFin : Heure
+}
+class GenerateurEmploiDuTemps {
+  + generer(seances, créneaux, salles, encadrants)
+}
+
+Encadrant <|-- Enseignant
+Encadrant <|-- Responsable
+SeanceTD "0..*" -- "1" Encadrant : encadrée par
+SeanceTD "0..*" -- "1" Salle : se déroule dans
+GenerateurEmploiDuTemps ..> SeanceTD : planifie
+GenerateurEmploiDuTemps ..> Salle : vérifie les conflits
+GenerateurEmploiDuTemps ..> Encadrant : vérifie les conflits
+
+note bottom
+Une séance ne chevauche aucune autre séance qui utilise
+la même salle ou le même encadrant à la même date.
+Enseignant et Responsable sont des encadrants possibles.
+end note
+@enduml
